@@ -1,78 +1,46 @@
 package com.example;
 
-import java.util.Scanner;
-
-import com.example.db.DBConn;
-import com.example.vo.CustomerVO;
+import com.example.vo.Customer;
 
 // ctrl + space 함수목록보기
 // ctrl + shift + f 자동정렬
 // ctrl + / 주석설정 및 해제
 
+// CustomerList 클래스를 생성해서
+// ArrayList<CustomerVO> 변수 생성
+// CustomerVO의 객체를 3개 추가하고
+// Main에서 CustomerList를 호출하고 CustomerPrint 출력하기
+
 public class Main {
 
 	public static void main(String[] args) {
-		try {
-			DBConn db = new DBConn(); // DB 접속
-			
-			Scanner scanner = new Scanner(System.in);
-			int menu = 0;
-			// 무한반복
-			while(true) {
-				System.out.println("1. INSERT, 2. UPDATE, 3.DELETE, 4. SELECT, 0. EXIT");
-				
-				// nextInt는 키보드 입력이 들어올 때까지 대기한다
-				// 키보드로 데이터 입력 후 enter를 누르면 해당 데이터가 menu로 들어오고 대기상태가 끝난다
-				// 메뉴 선택을 확인
-				menu = scanner.nextInt();
-				// 0. EXIT
-				if(menu == 0) {
-					System.out.println("종료되었습니다");
-					break;
-				}
-				// 1. INSERT
-				else if(menu == 1) {
-					System.out.println("고객아이디를 입력하세요");
-					String id = scanner.next();
-					
-					CustomerVO obj = new CustomerVO(id, "홍길동", 28, null);
-					int result = db.insertCustomer(obj);
-
-					if(result > 0) {
-						System.out.println("고객등록성공");
-					}else {
-						System.out.println("고객등록실패");
-					}
-				}
-				// 2. UPDATE
-				else if(menu == 2) {
-					System.out.println("변경할 고객아이디, 이름, 나이 순으로 입력하세요");
-					String id = scanner.next();
-					String name = scanner.next();
-					int age = scanner.nextInt();
-					db.updateCustomer(new CustomerVO(id, name, age, null));
-					
-				}
-				// 3. DELETE
-				else if(menu == 3) {
-					System.out.println("삭제할 고객아이디를 입력하세요");
-					String id = scanner.next();
-					db.deleteCustomer(new CustomerVO(id, null, 0, null));
-					
-				}
-				// 4. SELECT
-				else if(menu == 4) {
-					CustomerVO[] arr = db.selectCustomer();
-					System.out.println("배열의 개수: "+arr.length);
-				}
-			}
-			
-			// scanner 종료
-			scanner.close();
-		}catch(Exception e){
-			e.printStackTrace();
-			
-		}			
+		StoreList store = new StoreList("상점1", "051-123-4567");
+		
+		// 고객 등록
+		store.addCustomer(1001, "홍길동");
+		store.addCustomer(1005, "김철수");
+		store.addCustomer(1002, "이영희");
+		
+		// 고객 삭제
+		store.removeCustomer(1005);
+		
+		// 고객 정보 출력
+		store.printStoreList();
+		
+		// 고객 검색
+		// Customer customer = new Customer( , );
+		// main 내에서 새로 만들어서 하는 것보다 외부에서 만들어진 것을 가져오는 것이 나음
+		// main은 최대한 class에 덜 접근하는 것이 좋기 때문
+		// 따라서 외부에서 데이터를 가져오기 때문에 아래처럼 예외처리를 해줘야함
+		Customer customer = store.searchCustomer(1001);
+		if(customer != null) {
+			System.out.println(customer.toString());
+		}
+		else {
+			System.out.println("고객 정보가 없습니다.");
+		}
+		
+		
 	}
 }
 

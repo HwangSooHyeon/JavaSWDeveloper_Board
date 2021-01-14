@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import com.example.vo.CustomerVO;
 
@@ -111,7 +112,7 @@ public class DBConn {
 	
 	// 고객 목록
 	// int[] a = {1,2,3,4};
-	public CustomerVO[] selectCustomer() {
+	public ArrayList<CustomerVO> selectCustomer() {
 		try {
 			String sql = "SELECT * FROM CUSTOMERTBL";
 			Statement pstmt = conn.createStatement(
@@ -120,26 +121,10 @@ public class DBConn {
 			// int result = pstmt.executeUpdate(); // INSERT UPDATE DELETE
 			ResultSet rs = pstmt.executeQuery(sql);   // SELECT
 			
-			rs.last(); // 마지막으로 이동
-			int rows = rs.getRow(); // 갯수 구하기
-			rs.beforeFirst(); // 처음으로 이동
-			
-			// 목록의 개수 라인 수
-			System.out.println("ROWS: "+rows);
-			
-			// 개수 만큼 배열 생성
-			CustomerVO[] arr = new CustomerVO[rows];
-			
-			int cnt = 0;
-			
+			// 고객 정보를 리스트로 보관할 변수
+			ArrayList<CustomerVO> customerList = new ArrayList<CustomerVO>();
 			
 			while(rs.next()) {	// 1줄 씩 가져옴
-				System.out.println(rs.getInt("CST_ID"));
-				System.out.println(rs.getString("CST_NAME"));
-				System.out.println(rs.getInt("CST_AGE"));
-				System.out.println(rs.getString("CST_DATE"));
-				System.out.println();
-				
 				// rs에서 가져온 값을 customerVO객체로 만듦
 				CustomerVO obj = new CustomerVO(
 						rs.getString("CST_ID"),
@@ -148,10 +133,9 @@ public class DBConn {
 						rs.getString("CST_DATE"));
 				
 				// 배열에 추가함
-				arr[cnt] = obj;
-				cnt++;
+				customerList.add(obj);
 			}
-			return arr;			
+			return customerList;			
 			
 		}catch(Exception e) {
 			e.printStackTrace();

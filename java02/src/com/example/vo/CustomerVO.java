@@ -59,10 +59,6 @@ public class CustomerVO {
 	@Override
 	public String toString() {
 		return "CustomerVO [id=" + id + ", name=" + name + ", age=" + age + ", date=" + date + "]";
-	}
-
-	
-	
-	
+	}	
 	
 }
